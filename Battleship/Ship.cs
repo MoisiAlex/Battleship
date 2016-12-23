@@ -6,24 +6,33 @@ using System.Threading.Tasks;
 
 namespace Battleship
 {
-    class Ship : Point
+    class Ship 
     {
-        private int health { get; set; } = 2;
-        public Ship(int x, int y): base(x,y)
-        {
 
+        private Point _location;
+        private int _health { get; set;}
+        public Ship(Point Location, int Health)
+        {
+            _location = Location;
+            _health = Health;
         }
 
-         public void Hit(Point playerChoice)
+        public bool IsNeutralized { get { return _health <= 0; } }
+
+        public bool Hit(Point playerChoice)
         {
-            if (playerChoice.X == X && playerChoice.Y == Y)
+            if (playerChoice.X == _location.X && playerChoice.Y==_location.Y) 
             {
-                Console.WriteLine("HIT!");
+                return true;  
             }
 
-            else { Console.WriteLine("MISS!"); }
+            else {return false; }
         }
 
+        public void DecreaseHealth(int factor)
+        {
+            _health -= factor;
+        }
     }
 
 }
