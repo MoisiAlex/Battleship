@@ -17,7 +17,7 @@ namespace Battleship
             Y = bar;
             }
 
-        static public Point mapLocationEntry(Map map)
+    /*    static public Point mapLocationEntry(Map[,] map)
         {
             bool valid = false;
             Point bar = new Point(1, 1);
@@ -45,6 +45,6 @@ namespace Battleship
             return bar;
         }
 
-
+    */
     }
 }
