@@ -10,42 +10,36 @@ namespace Battleship
     {
        static void Main(string[] args)
         {
-         
-            Map[,] one = new Map[8,8];
 
-            Console.WriteLine("First thing's first, select where your ship is located.");
-            int x = 0;
-            int y = 0;
-            Console.WriteLine("Enter X and Y with a space:");
-            string[] entry = Console.ReadLine().Split();
-            if (entry.Length != 2) { Console.WriteLine("This entry doesn't look like 2 numbers."); };
-            if (!(Int32.TryParse(entry[0], out x))) { Console.WriteLine("Your first entry is not a number.");  };
-            if (!(Int32.TryParse(entry[1], out y))) { Console.WriteLine("Your second entry is not a number."); };
+            Map player1 = new Map(new int[8,8]);
 
-            Map.GenerateMap(x, y, one);
+            Random rand1 = new Random();
+            
 
-            Map.PrintMap(one);
+            Point baz = new Point(rand1.Next(0,8), rand1.Next(0, 8));
+                 
+            Map.printMap(player1);
 
-            /*            Console.WriteLine("First thing's first, select where your ship is located.");
-                        Ship basic = new Ship(Point.mapLocationEntry(one), 2);
+            player1.addShip(baz);
 
-                        Console.WriteLine("Perfect, try to hit it now.");
 
-                        while (!basic.IsNeutralized)
-                        { 
-                        if (basic.Hit(Point.mapLocationEntry(one)))
-                        {
-                            Console.WriteLine("HIT");
-                                basic.DecreaseHealth(1);
+            var valid = 0;
+            while(player1.isAlive())
+            {
+                valid = player1.hit(Point.playerEntry(player1));
 
-                        }
-                        else
-                        {
-                            Console.WriteLine("MISS");
-                        }
+                if (valid == 2)
+                { Console.WriteLine("You are close, try again"); }
+                else if (valid == 0)
+                { Console.WriteLine("Complete miss, try again"); }
+                else if (valid == 1)
+                { Console.WriteLine("You hit!"); }
+            
+            }
 
-                        }
-                        */
+            Console.ReadKey();
+
+            Map.printMap(player1);
 
             Console.ReadKey();
 

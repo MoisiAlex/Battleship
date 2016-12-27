@@ -17,8 +17,9 @@ namespace Battleship
             Y = bar;
             }
 
-    /*    static public Point mapLocationEntry(Map[,] map)
+       static public Point playerEntry(Map map)
         {
+            //Validate input. Will return a point if valid, or loop until entry is corect.
             bool valid = false;
             Point bar = new Point(1, 1);
 
@@ -32,7 +33,7 @@ namespace Battleship
                 if (!(Int32.TryParse(entry[0], out x))) { Console.WriteLine("Your first entry is not a number."); continue; };
                 if (!(Int32.TryParse(entry[1], out y))) { Console.WriteLine("Your second entry is not a number."); continue; };
 
-
+            //Validate the point is on the map we created.
                 Point foo = new Point(x, y);
                 if (map.OnMap(foo))
                 {
@@ -45,6 +46,14 @@ namespace Battleship
             return bar;
         }
 
-    */
+        public int DistanceTo(int x, int y)
+        {
+            return (int)Math.Sqrt(Math.Pow(X - x, 2) + Math.Pow(Y - y, 2));
+        }
+        public int DistanceTo(Point point)
+        {
+            return DistanceTo(point.X, point.Y);
+        }
+
     }
 }
