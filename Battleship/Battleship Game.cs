@@ -11,14 +11,16 @@ namespace Battleship
        static void Main(string[] args)
         {
 
-            Map player1 = new Map(new int[8,8]);
+            Player player1 = new Player(new string[8,8]);
 
             Random rand1 = new Random();
             
 
             Point baz = new Point(rand1.Next(0,8), rand1.Next(0, 8));
-                 
-            Map.printMap(player1);
+
+           Player.printPlayerMap(player1);
+
+         
 
             player1.addShip(baz);
 
@@ -26,7 +28,7 @@ namespace Battleship
             var valid = 0;
             while(player1.isAlive())
             {
-                valid = player1.hit(Point.playerEntry(player1));
+                valid = player1.hit(Point.playerEntry(player1,player1));
 
                 if (valid == 2)
                 { Console.WriteLine("You are close, try again"); }
@@ -39,7 +41,7 @@ namespace Battleship
 
             Console.ReadKey();
 
-            Map.printMap(player1);
+            
 
             Console.ReadKey();
 
