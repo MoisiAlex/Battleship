@@ -6,39 +6,49 @@ using System.Threading.Tasks;
 
 namespace Battleship
 {
-    class Map
+    class Board
     {
         private string[,] _map;
-        public int maxX => _map.GetUpperBound(0);
-        public int maxY => _map.GetUpperBound(1);
-        
-
-        public Map(string[,] map)
+      
+        public Board(string[,] map1)
         {
-            int bound0 = map.GetUpperBound(0); 
-            int bound1 = map.GetUpperBound(1);
+            _map = Board.generateEmptyMap(map1);
+
+        }
+
+
+        public static string[,] generateEmptyMap (string[,] map1)
+        {// Method filling the 2D string array with waves -
+            int bound0 = map1.GetUpperBound(0);
+            int bound1 = map1.GetUpperBound(1);
             for (int variable1 = 0; variable1 <= bound0; variable1++)
             {
                 for (int variable2 = 0; variable2 <= bound1; variable2++)
                 {
-                    map[variable1, variable2] = "-";     
+                    map1[variable1, variable2] = "-";
                 }
             }
 
-            _map = map;
+            return map1;
         }
+
         public bool OnMap(Point point)
         {
-            return (point.X >= 0 && point.Y >= 0 && point.X <= maxX && point.Y <= maxY);
+            return (point.X >= 0 && point.Y >= 0 && point.X <= _map.GetUpperBound(0) && point.Y <= _map.GetUpperBound(1));
         }
         public string returnValue(Point point)
-        {
+        { //Overload the returnValue method in case I decide to pass a point instead of coordinates
             return returnValue(point.X, point.Y);
         }
 
         public string returnValue(int x, int y)
         {
             return (_map[x, y]);
+        }
+
+        public void setValue(int x, int y, string value)
+        {
+            _map[x, y] = value;
         }
 
         public static void printMap(string[,] foo)
@@ -76,7 +86,10 @@ namespace Battleship
             }
             Console.WriteLine();
         }
+        public static void printMap(Board foo)
+        {
+           printMap(foo._map);
+        }
 
-   
     }
 }
