@@ -11,24 +11,20 @@ namespace Battleship
        static void Main(string[] args)
         {
 
-            Player player1 = new Player(new string[10,10],new string[10,10]);
-
-            Random rand1 = new Random();
-            
-
-            Point baz = new Point(rand1.Next(0,8), rand1.Next(0, 8));
-
-           Player.printPlayerMap(player1);
-            Point rez = new Point(11, 11);
+            Player player1 = new Player(new string[10,10],new string[10,10]);         
+           
 
 
-          player1.AIaddShip(player1, 5);
+            player1.AIaddShip(player1, 5);
+            player1.AIaddShip(player1, 4);
+            player1.AIaddShip(player1, 3);
+            player1.AIaddShip(player1, 3);
+            player1.AIaddShip(player1, 2);
 
-            /* player added ship
-            player1.addShip(Point.playerEntry(player1, player1), 3,"side");
-            */
+       //     Player.printGameMap(player1);
 
-         
+
+
 
 
             var valid = 0;
@@ -38,11 +34,9 @@ namespace Battleship
 
                 if (valid == 2)
                 { Console.WriteLine("You are close, try again");
-                    player1.AIaddShip(player1, 5);
                 }
                 else if (valid == 0)
                 { Console.WriteLine("Complete miss, try again");
-                    player1.AIaddShip(player1, 5);
                 }
                 else if (valid == 1)
                 { Console.WriteLine("You hit!"); }

@@ -19,8 +19,14 @@ namespace Battleship
             _playerMap = Board.generateEmptyMap(map1);
         }
 
-// Game logic for working with the maps
-       private void removeShip(Point location)
+        // Game logic for working with the maps
+        private int upCount = 0;
+        private int sideCount = 0;
+       
+        private int dir = new Random().Next(0, 2); //0 == up; 1 == side
+
+
+        private void removeShip(Point location)
         {
             _playerMap[location.X, location.Y] = "X";
             _map.setValue(location.X, location.Y,"O");
@@ -39,32 +45,31 @@ namespace Battleship
             {
                 if (playerChoice.DistanceTo(i) <= 2)
                 { return true; }
-
             }
-
             return false;
         }
 
-   
-        public bool addShip(Point location, int shipSize, string orientation)
+        private bool addShip(Point location, int shipSize, int orientation)
         { 
-            if (orientation == "up")
+            if (orientation == 0)
             {
                   for (int i = 0; i < shipSize; i++)
                 {
                     Point ship = new Point(location.X + i, location.Y);
                     _map.setValue(location.X + i, location.Y, "S");
                     _ships.Add(ship);
+                    upCount = 0;
                 }
                 return true;
             }
-            else if (orientation == "side")
+            else if (orientation == 1)
             {
                 for (int i = 0; i < shipSize; i++)
                 {
                     Point ship = new Point(location.X, location.Y + i);
                     _map.setValue(location.X, location.Y + i, "S");
                     _ships.Add(ship);
+                    sideCount = 0;
                 }
                 return true;
             }
@@ -76,46 +81,58 @@ namespace Battleship
         {
             if (dir == 0)
             {
-                for (int i = 0; i < end.X; i++)
+                for (int i = start.X; i < end.X; i++)
                 {
-                    if(_map.returnValue(i, start.Y) != "S") { return true; }
+                    if(_map.returnValue(i, start.Y) == "S")
+                    {
+                        upCount += 1;
+                        return true;
+                    }
                 }
                 return false;
             }
             else
             {
-                for (int i = 0; i < end.Y; i++)
+                for (int i = start.Y; i < end.Y; i++)
                 {
-                    if (_map.returnValue(start.X, i) != "S") { return true; }
+                    if (_map.returnValue(start.X, i) == "S")
+                    {
+                        sideCount += 1;
+                        return true;
+                    }
                 }
                 return false;
             }
 
         }
 
-        private Point randomize (Player p1, int shipSize, int dir)
+        private Point findValidLoctaion (Player p1, int shipSize, int dir)
         {
             Random rand1 = new Random();
-
             Point shipStart = new Point(rand1.Next(0, p1._playerMap.GetUpperBound(0)-1), rand1.Next(0, p1._playerMap.GetUpperBound(1)-1));
 
-
+            
             if (dir == 0)
-            {
+            { 
                 Point shipEnd = new Point(shipStart.X + shipSize, shipStart.Y);
-                while (!p1.OnMap(shipStart) || !p1.OnMap(shipEnd) || (!p1.shipCollision(shipStart, shipEnd, dir)))
+                while (!p1.OnMap(shipStart) || !p1.OnMap(shipEnd) || (p1.shipCollision(shipStart, shipEnd, dir)))
                 {
-                    shipStart = new Point(rand1.Next(0, p1._playerMap.GetUpperBound(0) - 1), rand1.Next(0, p1._playerMap.GetUpperBound(1) - 1));
+                    shipStart = new Point(rand1.Next(0, p1._playerMap.GetUpperBound(0)+1), rand1.Next(0, p1._playerMap.GetUpperBound(1)+1));
                     shipEnd = new Point(shipStart.X + shipSize, shipStart.Y);
+                    if (upCount > 5)
+                    { dir = 1; }
                 }
+                
             }
             else
-            {
+            { 
                 Point shipEnd = new Point(shipStart.X, shipStart.Y + shipSize);
-                while (!p1.OnMap(shipStart) || !p1.OnMap(shipEnd) || (!p1.shipCollision(shipStart, shipEnd, dir)))
+                while (!p1.OnMap(shipStart) || !p1.OnMap(shipEnd) || (p1.shipCollision(shipStart, shipEnd, dir)))
                 {
-                    shipStart = new Point(rand1.Next(0, p1._playerMap.GetUpperBound(0) - 1), rand1.Next(0, p1._playerMap.GetUpperBound(1) - 1));
+                    shipStart = new Point(rand1.Next(0, p1._playerMap.GetUpperBound(0)+1), rand1.Next(0, p1._playerMap.GetUpperBound(1)+1));
                     shipEnd = new Point(shipStart.X, shipStart.Y + shipSize);
+                    if (sideCount > 5)
+                    { dir = 0; }
                 }
 
             }
@@ -123,22 +140,16 @@ namespace Battleship
             return shipStart;
         }
 
-        public void AIaddShip(Player p1, int shipSize)
+        public void AIaddShip(Player p1, int shipSize) /// only pass through board. 
         {
-            Random rand1 = new Random();
-            int dir = rand1.Next(0, 2); //0 == up; 1 == side
-            Point shipLocation = randomize(p1, shipSize,dir);
+            dir = new Random().Next(0, 2); //0 == up; 1 == side
 
-            if (dir == 0)
-            {
-                p1.addShip(shipLocation, shipSize, "up");
-            }
-                       
-            else
-            {
-                p1.addShip(shipLocation, shipSize, "side");
-            }
+            Point shipLocation = findValidLoctaion(p1, shipSize, dir);
+            p1.addShip(shipLocation, shipSize, dir);
+                      
         }
+
+//------------------------------------------------------------------------
 
 
         public bool isAlive()
